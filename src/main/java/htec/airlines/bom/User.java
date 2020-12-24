@@ -32,6 +32,9 @@ public class User {
 	private String userName;
 	
 	@Column
+	private String password;
+	
+	@Column
 	private String salt;
 	
 	@Column
@@ -41,7 +44,7 @@ public class User {
 		super();
 	}
 
-	public User(Long id, boolean isActive, LocalDateTime dateTimeCreatedOn, String firstName, String lastName,
+	public User(Long id, boolean isActive, LocalDateTime dateTimeCreatedOn, String firstName, String lastName, String password,
 			String userName, String salt, UserType type) {
 		super();
 		this.id = id;
@@ -50,6 +53,7 @@ public class User {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.userName = userName;
+		this.password = password;
 		this.salt = salt;
 		this.type = type;
 	}
@@ -116,5 +120,13 @@ public class User {
 
 	public void setType(UserType type) {
 		this.type = type;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

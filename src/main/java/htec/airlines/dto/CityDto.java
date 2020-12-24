@@ -3,6 +3,7 @@ package htec.airlines.dto;
 import java.util.Collection;
 
 public class CityDto {
+	private Long id;
 	private String name;
 	private Long country;
 	private String description;
@@ -12,14 +13,21 @@ public class CityDto {
 		super();
 	}
 
-	public CityDto(String name, Long country, String description, Collection<CommentDto> comments) {
+	public CityDto(Long id, String name, Long country, String description, Collection<CommentDto> comments) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.country = country;
 		this.description = description;
 		this.comments = comments;
 	}
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}

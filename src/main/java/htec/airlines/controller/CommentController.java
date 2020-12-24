@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import htec.airlines.dto.CommentDto;
+import htec.airlines.service.CommentService;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -19,17 +20,17 @@ public class CommentController {
 	private CommentService commentService;
 	
 	@PostMapping("/add")
-	public ResponseEntity<Boolean> addComment(CommentDto commentDto) {
-		return true;
+	public ResponseEntity<CommentDto> addComment(CommentDto commentDto) {
+		return ResponseEntity.ok(commentService.createComment(commentDto));
 	}
 	
 	@PutMapping("/update")
-	public boolean updateComment(CommentDto commentDto) {
-		return true;
+	public ResponseEntity<CommentDto> updateComment(CommentDto commentDto) {
+		return ResponseEntity.ok(commentService.updateComment(commentDto));
 	}
 	
 	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Boolean> deleteComment(@RequestParam("id") Long id) {
-		return true;
+		return ResponseEntity.ok(commentService.deleteComment(id));
 	}
 }

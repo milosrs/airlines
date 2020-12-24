@@ -36,12 +36,16 @@ public class Comment {
 	@JoinColumn(name = "RefUser")
 	private User createdBy;
 	
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	@JoinColumn(name = "RefCity")
+	private City city;
+	
 	public Comment() {
 		super();
 	}
 
 	public Comment(Long id, boolean isActive, LocalDateTime dateTimeCreatedOn, LocalDateTime dateTimeModifiedOn,
-			String description, User createdBy) {
+			String description, User createdBy, City city) {
 		super();
 		this.id = id;
 		this.isActive = isActive;
@@ -49,6 +53,7 @@ public class Comment {
 		this.dateTimeModifiedOn = dateTimeModifiedOn;
 		this.description = description;
 		this.createdBy = createdBy;
+		this.city = city;
 	}
 
 	public Long getId() {
@@ -97,5 +102,13 @@ public class Comment {
 
 	public void setCreatedBy(User createdBy) {
 		this.createdBy = createdBy;
+	}
+
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 }

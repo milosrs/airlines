@@ -1,6 +1,7 @@
 package htec.airlines.dto;
 
 public class GetCityRequestDto {
+	private Long id;
 	private String cityName;
 	private Integer commentNumber;
 	
@@ -9,8 +10,9 @@ public class GetCityRequestDto {
 		super();
 	}
 
-	public GetCityRequestDto(String cityName, Integer commentNumber) {
+	public GetCityRequestDto(Long id, String cityName, Integer commentNumber) {
 		super();
+		this.id = id;
 		this.cityName = cityName;
 		this.commentNumber = commentNumber;
 	}
@@ -29,5 +31,13 @@ public class GetCityRequestDto {
 
 	public void setCommentNumber(Integer commentNumber) {
 		this.commentNumber = commentNumber;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

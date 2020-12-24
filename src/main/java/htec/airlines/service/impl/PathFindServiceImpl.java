@@ -17,6 +17,7 @@ import htec.airlines.bom.City;
 import htec.airlines.bom.Route;
 import htec.airlines.dto.PathDto;
 import htec.airlines.graph.Graph;
+import htec.airlines.repository.CityRepository;
 import htec.airlines.repository.RouteRepository;
 import htec.airlines.service.PathFindService;
 
@@ -26,6 +27,16 @@ public class PathFindServiceImpl implements PathFindService {
 	
 	@Autowired
 	private RouteRepository routeRepository;
+	@Autowired
+	private CityRepository cityRepository;
+	
+	@Override
+	public Collection<PathDto> findPath(Long sourceCityId, Long destinationCityId) throws Exception {
+		final City srcCity = cityRepository.findById(sourceCityId).get();
+		final City dstCity = cityRepository.findById(destinationCityId).get();
+		
+		return findPath(srcCity, dstCity);
+	}
 	
 	@Override
 	public Collection<PathDto> findPath(City sourceCity, City destinationCity) throws Exception {

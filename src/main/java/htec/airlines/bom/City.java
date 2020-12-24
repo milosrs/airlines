@@ -50,6 +50,10 @@ public class City {
 	@JoinColumn(name = "RefAirport")
 	private Collection<Airport> airports;
 	
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = Airport.class)
+	@JoinColumn(name = "RefComment")
+	private Collection<Comment> comments;
+	
 	public City() {
 		super();
 		airports = new ArrayList<>();

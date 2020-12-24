@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import htec.airlines.bom.Comment;
+import htec.airlines.converter.CityToDtoConverter;
+import htec.airlines.converter.CommentToDtoConverter;
 import htec.airlines.dto.CommentDto;
 import htec.airlines.repository.CommentRepository;
 import htec.airlines.service.CommentService;
@@ -13,6 +15,8 @@ import htec.airlines.service.CommentService;
 public class CommentServiceImpl implements CommentService {
 	@Autowired
 	private CommentRepository commentRepository;
+	@Autowired
+	private CommentToDtoConverter commentToDtoConverter;
 
 	@Override
 	public CommentDto createComment(CommentDto commentDto) {
@@ -25,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
 		comment.setDescription(commentDto.getDescription());
 		
 		commentRepository.save(comment);
-		return commentDto;
+		return commentToDtoConverter.convert(comment);
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
 		
 		commentRepository.save(comment);
 		
-		return commentDto;
+		return commentToDtoConverter.convert(comment);
 	}
 
 	@Override
