@@ -89,10 +89,13 @@ public class PathFindServiceImpl implements PathFindService {
 		
 		for(Airport sourceAirport : sourceCityAirports) {
 			List<Pair<Airport, Double>> connectedSourceAirports = Graph.getInstance().getAdjacencyList().get(sourceAirport);
-			boolean sourceIsConnectedToDestination = connectedSourceAirports.parallelStream().filter(pair -> destinationCityAirports.contains(pair.getFirst())).count() > 0;
 			
-			if(sourceIsConnectedToDestination) {
-				possibleSources.add(sourceAirport);
+			if(connectedSourceAirports != null) {
+				boolean sourceIsConnectedToDestination = connectedSourceAirports.parallelStream().filter(pair -> destinationCityAirports.contains(pair.getFirst())).count() > 0;
+				
+				if(sourceIsConnectedToDestination) {
+					possibleSources.add(sourceAirport);
+				}
 			}
 		}
 		

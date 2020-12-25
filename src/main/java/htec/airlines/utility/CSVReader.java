@@ -38,7 +38,7 @@ public class CSVReader {
 		try(InputStreamReader isr = new InputStreamReader(is);
 				BufferedReader br = new BufferedReader(isr)) {
 			br.lines()
-				.map(l -> Arrays.asList(l.split(CSV_SEPARATOR)))
+				.map(l -> Arrays.asList(l.replaceAll("\"", "").split(CSV_SEPARATOR)))
 				.forEach(tokenList -> tokens.add(tokenList));
 		}
 		

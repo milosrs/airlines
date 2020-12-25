@@ -13,9 +13,6 @@ import htec.airlines.bom.Country;
 
 @Repository
 public interface CityRepository extends JpaRepository<City, Long> {
-
-	Collection<City> findByName(String name);
-	
 	@Query("SELECT c FROM City c"
 			+ " WHERE c.name = :cityName"
 			+ " AND c.country.name = :countryName")
@@ -25,5 +22,7 @@ public interface CityRepository extends JpaRepository<City, Long> {
 			+ " WHERE c.country = :country")
 	Optional<City> findByCountry(@Param(value = "country") Country country);
 	
-	Collection<City> findAllByName(String cityName);
+	@Query("SELECT c FROM City c"
+			+ " WHERE c.name = :cityName")
+	Collection<City> findAllByName(@Param("cityName")String cityName);
 }

@@ -10,5 +10,5 @@ public interface CityService {
 
 	Collection<CityDto> getAllCities(GetCityRequestDto getCityRequest);
 	
-	Boolean createNewCity(CreateUpdateCityDto city);
+	Boolean createNewCity(CreateUpdateCityDto city, String username);
 }

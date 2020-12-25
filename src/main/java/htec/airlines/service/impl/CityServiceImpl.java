@@ -1,15 +1,20 @@
 package htec.airlines.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import htec.airlines.bom.City;
 import htec.airlines.bom.Comment;
+import htec.airlines.bom.Country;
+import htec.airlines.bom.User;
 import htec.airlines.converter.CityToDtoConverter;
 import htec.airlines.converter.CommentToDtoConverter;
 import htec.airlines.dto.CityDto;
@@ -19,8 +24,10 @@ import htec.airlines.dto.GetCityRequestDto;
 import htec.airlines.repository.CityRepository;
 import htec.airlines.repository.CommentRepository;
 import htec.airlines.repository.CountryRepository;
+import htec.airlines.repository.UserRepository;
 import htec.airlines.service.CityService;
 
+@Service
 public class CityServiceImpl implements CityService {
 
 	@Autowired
@@ -30,24 +37,35 @@ public class CityServiceImpl implements CityService {
 	@Autowired
 	private CountryRepository countryRepository;
 	@Autowired
+	private UserRepository userRepository;
+	@Autowired
 	private CommentToDtoConverter commentToDtoConverter;
 	@Autowired
 	private CityToDtoConverter cityToDtoConverter;
 	
+	
 	@Override
-	public Boolean createNewCity(CreateUpdateCityDto city) {
+	public Boolean createNewCity(CreateUpdateCityDto city, String username) {
 		try {
 			City c = new City();
+			Optional<Country> country = countryRepository.findById(city.getCountry());
+			Optional<User> u = userRepository.findByUserName(username);
 			
-			c.setActive(true);
-			c.setCountry(countryRepository.getOne(city.getCountry()));
-			c.setName(city.getName());
-			c.setDescription(city.getDescription());
-			
-			cityRepository.save(c);
-			
-			return true;
+			if(country.isPresent() && u.isPresent()) {
+				c.setActive(true);
+				c.setCountry(country.get());
+				c.setName(city.getName());
+				c.setCreatedBy(u.get());
+				c.setDescription(city.getDescription());
+				c.setDateTimeCreatedOn(LocalDateTime.now());
+				cityRepository.save(c);
+				
+				return true;
+			} else {
+				return false;
+			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -67,13 +85,17 @@ public class CityServiceImpl implements CityService {
 			List<Comment> comments = new ArrayList<>();
 			List<CommentDto> commentDtos = new ArrayList<>();
 			
-			if(getCityRequest.getCommentNumber() > 0 && getCityRequest.getCommentNumber() != null) {
-				comments = commentRepository.getMaxNumberOfNewestCommentsForCity(getCityRequest);
+			if(getCityRequest.getCommentNumber() != null) {
+				if(getCityRequest.getCommentNumber() > 0) {
+					comments = commentRepository.getMaxNumberOfNewestCommentsForCity(getCityRequest);	
+				}
 			} else {
 				comments = commentRepository.findAllByRefCity(c);
 			}
 			
-			commentDtos.add(comments.parallelStream().map(com -> commentToDtoConverter.convert(com)).findFirst().get());
+			if(!comments.isEmpty() ) {
+				commentDtos.addAll(comments.parallelStream().map(com -> commentToDtoConverter.convert(com)).collect(Collectors.toList()));	
+			}
 			
 			final CityDto dto = cityToDtoConverter.convert(c);
 			

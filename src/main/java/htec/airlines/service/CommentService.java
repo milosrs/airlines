@@ -4,9 +4,9 @@ import htec.airlines.dto.CommentDto;
 
 public interface CommentService {
 
-	CommentDto createComment(CommentDto commentDto);
+	CommentDto createComment(CommentDto commentDto, String username);
 	
-	CommentDto updateComment(CommentDto commentDto);
+	CommentDto updateComment(CommentDto commentDto, String username);
 
-	Boolean deleteComment(Long commentId);
+	Boolean deleteComment(Long commentId, String username);
 }

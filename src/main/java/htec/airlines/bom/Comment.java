@@ -36,9 +36,9 @@ public class Comment {
 	@JoinColumn(name = "RefUser")
 	private User createdBy;
 	
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = City.class)
 	@JoinColumn(name = "RefCity")
-	private City city;
+	private City refCity;
 	
 	public Comment() {
 		super();
@@ -53,7 +53,7 @@ public class Comment {
 		this.dateTimeModifiedOn = dateTimeModifiedOn;
 		this.description = description;
 		this.createdBy = createdBy;
-		this.city = city;
+		this.refCity = city;
 	}
 
 	public Long getId() {
@@ -105,10 +105,10 @@ public class Comment {
 	}
 
 	public City getCity() {
-		return city;
+		return refCity;
 	}
 
 	public void setCity(City city) {
-		this.city = city;
+		this.refCity = city;
 	}
 }

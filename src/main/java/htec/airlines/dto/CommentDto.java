@@ -5,16 +5,18 @@ import java.time.LocalDateTime;
 public class CommentDto {
 	private Long id;
 	private Long createdBy;
+	private Long cityId;
 	private LocalDateTime createdOn;
 	private LocalDateTime modifiedOn;
 	private String description;
 	
-	public CommentDto(Long id, Long createdBy, LocalDateTime createdOn, LocalDateTime modifiedOn, String description) {
+	public CommentDto(Long id, Long createdBy, Long cityId, LocalDateTime createdOn, LocalDateTime modifiedOn, String description) {
 		super();
 		this.id = id;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 		this.modifiedOn = modifiedOn;
+		this.cityId = cityId;
 		this.description = description;
 	}
 
@@ -60,5 +62,13 @@ public class CommentDto {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}	
+	}
+
+	public Long getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Long cityId) {
+		this.cityId = cityId;
+	}
 }

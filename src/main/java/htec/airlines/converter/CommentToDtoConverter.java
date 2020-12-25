@@ -13,7 +13,7 @@ public class CommentToDtoConverter implements Converter<Comment, CommentDto> {
 	public CommentDto convert(Comment source) {
 		CommentDto dto = new CommentDto();
 		
-		//dto.setCreatedBy(source.getCreatedBy());
+		dto.setCreatedBy(source.getCreatedBy().getId());
 		dto.setCreatedOn(source.getDateTimeCreatedOn());
 		dto.setModifiedOn(source.getDateTimeModifiedOn());
 		dto.setDescription(source.getDescription());

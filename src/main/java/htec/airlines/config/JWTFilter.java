@@ -12,12 +12,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import htec.airlines.service.auth.JWTUserDetailsService;
 import htec.airlines.utility.JWTTokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 
+@Component
 public class JWTFilter extends OncePerRequestFilter {
 
 	@Autowired
@@ -62,6 +64,13 @@ public class JWTFilter extends OncePerRequestFilter {
 		}
 		
 		filterChain.doFilter(request, response);
+	}
+	
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		boolean shouldNotFilter = request.getRequestURL().toString().contains("/api/auth") || request.getRequestURL().toString().contains("/h2-console");
+		System.out.println("Shouldnt filter " + request.getRequestURL().toString() + " : " + shouldNotFilter);
+		return shouldNotFilter;
 	}
 
 }

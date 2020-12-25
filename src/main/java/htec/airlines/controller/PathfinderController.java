@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +19,8 @@ public class PathfinderController {
 	@Autowired
 	private PathFindService pathFindService;
 	
-	public ResponseEntity<Collection<PathDto>> getPath(FindPathDto dto) throws Exception {
+	@PostMapping("/find")
+	public ResponseEntity<Collection<PathDto>> getPath(@RequestBody FindPathDto dto) throws Exception {
 		return ResponseEntity.ok(pathFindService.findPath(dto.getSrcCity(), dto.getDstCity()));
 	}
 }
