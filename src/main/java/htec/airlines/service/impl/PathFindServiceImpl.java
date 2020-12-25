@@ -3,6 +3,7 @@ package htec.airlines.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import htec.airlines.bom.City;
 import htec.airlines.bom.Route;
 import htec.airlines.dto.PathDto;
 import htec.airlines.graph.Graph;
+import htec.airlines.repository.AirportRepository;
 import htec.airlines.repository.CityRepository;
 import htec.airlines.repository.RouteRepository;
 import htec.airlines.service.PathFindService;
@@ -58,14 +60,17 @@ public class PathFindServiceImpl implements PathFindService {
 		Double minPrice = Double.POSITIVE_INFINITY;
 		
 		for(Collection<Airport> path : possiblePaths) {
+			if(path.isEmpty()) {
+				continue;
+			}
 			Airport source = ((List<Airport>)path).get(0);
 			List<PathDto> pathRepresentation = new ArrayList<PathDto>();
-			List<Pair<Airport, Double>> adjacentToSource = Graph.getInstance().getAdjacencyList().get(((List<Airport>)path).get(0));
+			List<Pair<Airport, Double>> adjacentToSource = Graph.getInstance().getListOfPairsForAirport(source.getId());
 			Double pathPrice = 0D;
 			
 			for(int i = 1; i < path.size(); ++i) {
 				final Airport dst = ((List<Airport>)path).get(i);
-				Pair<Airport, Double> nextStop = adjacentToSource.parallelStream().filter(p -> p.getFirst().getId().equals(dst.getId())).findFirst().get();
+				Pair<Airport, Double> nextStop = adjacentToSource.stream().filter(p -> p.getFirst().getId().equals(dst.getId())).findFirst().get();
 				pathRepresentation.add(new PathDto(source.getName(), dst.getName(), nextStop.getSecond()));
 				source = dst;
 				pathPrice += nextStop.getSecond();
@@ -88,10 +93,13 @@ public class PathFindServiceImpl implements PathFindService {
 		Collection<Airport> possibleSources = new ArrayList<>();
 		
 		for(Airport sourceAirport : sourceCityAirports) {
-			List<Pair<Airport, Double>> connectedSourceAirports = Graph.getInstance().getAdjacencyList().get(sourceAirport);
+			List<Pair<Airport, Double>> connectedSourceAirports = Graph.getInstance().getListOfPairsForAirport(sourceAirport.getId());
 			
 			if(connectedSourceAirports != null) {
-				boolean sourceIsConnectedToDestination = connectedSourceAirports.parallelStream().filter(pair -> destinationCityAirports.contains(pair.getFirst())).count() > 0;
+				boolean sourceIsConnectedToDestination = connectedSourceAirports.stream()
+						.filter(pair -> destinationCityAirports.stream()
+								.filter(dca -> dca.getId().equals(pair.getFirst().getId())).findAny().isPresent()
+								).count() > 0;
 				
 				if(sourceIsConnectedToDestination) {
 					possibleSources.add(sourceAirport);
@@ -130,7 +138,7 @@ public class PathFindServiceImpl implements PathFindService {
 					return null;
 				}
 				
-				if(currentAirport.equals(destination)) {
+				if(currentAirport.getId().equals(destination.getId())) {
 					List<Airport> reconstructedPath = new ArrayList<Airport>();
 					
 					while(!parents.get(currentAirport).equals(currentAirport)) {
@@ -143,7 +151,7 @@ public class PathFindServiceImpl implements PathFindService {
 					return reconstructedPath;
 				}
 				
-				for(Pair<Airport, Double> neibghour : Graph.getInstance().getAdjacencyList().get(currentAirport)) {
+				for(Pair<Airport, Double> neibghour : Graph.getInstance().getListOfPairsForAirport(sourceAirport.getId())) {
 					Airport neibghourAirport = neibghour.getFirst();
 					Double weight = neibghour.getSecond();
 					Double newWeight = gScoreMap.get(currentAirport) + weight;
@@ -170,7 +178,7 @@ public class PathFindServiceImpl implements PathFindService {
 			closedSet.add(currentAirport);
 		}
 		
-		return null;
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -186,13 +194,15 @@ public class PathFindServiceImpl implements PathFindService {
 	
 	private Double heuristic(final Airport n, final Airport goal) throws Exception {
 		Double haversine = computeHaversine(n, goal);
-		Optional<Route> nGoalRoute = routeRepository.findByRefSourceAirportAndRefDestinationAirport(n, goal);
-
+		List<Route> nGoalRoute = routeRepository.findByRefSourceAirportAndRefDestinationAirport(n, goal);
+		
 		if(nGoalRoute.isEmpty()) {
-			return 0D;
+			return Double.POSITIVE_INFINITY;
 		}
-				
-		return haversine * (nGoalRoute.get().getStops() == 0 ? 1D : nGoalRoute.get().getStops());
+		
+		final Route cheapestRoute = nGoalRoute.stream().min(Comparator.comparingDouble(Route::getPrice)).get();
+		
+		return haversine * (cheapestRoute.getStops() == 0 ? 1D : cheapestRoute.getStops());
 	}
 	
 	/**

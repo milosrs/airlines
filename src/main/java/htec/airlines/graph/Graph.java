@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.util.Pair;
 
@@ -44,6 +45,17 @@ public class Graph {
 	
 	public Map<Airport, List<Pair<Airport, Double>>> getAdjacencyList() {
 		return adjacencyList;
+	}
+	
+	public List<Pair<Airport, Double>> getListOfPairsForAirport(Long airportId) {
+		final Optional<Airport> keyOptional = adjacencyList.keySet().parallelStream().filter(a -> a.getId().equals(airportId)).findFirst();
+		List<Pair<Airport, Double>> pairs = new ArrayList<>();
+		
+		if(keyOptional.isPresent()) {
+			pairs = adjacencyList.get(keyOptional.get());
+		}
+		
+		return pairs;
 	}
 	
 	public String getAdjacencyListRepresentation() {

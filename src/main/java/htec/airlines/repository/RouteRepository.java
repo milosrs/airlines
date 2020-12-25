@@ -16,5 +16,5 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
 	
 	List<Route> findByRefDestinationAirport(Airport refDestinationAirport);
 	
-	Optional<Route> findByRefSourceAirportAndRefDestinationAirport(Airport refSourceAirport, Airport refDestinationAirport);
+	List<Route> findByRefSourceAirportAndRefDestinationAirport(Airport refSourceAirport, Airport refDestinationAirport);
 }

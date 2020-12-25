@@ -78,9 +78,9 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 		Airport vrsacAir = findAirportByName("Aerodrom Vrsac");
 		Airport batajnica = findAirportByName("Batajnica");
 		
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(Optional.of(findRoute(nikolaTesla, vrsacAir)));
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(Optional.of(findRoute(nikolaTesla, batajnica)));
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(Optional.of(findRoute(batajnica, vrsacAir)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(List.of(findRoute(nikolaTesla, vrsacAir)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(List.of(findRoute(nikolaTesla, batajnica)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(List.of(findRoute(batajnica, vrsacAir)));
 		
 		assertDoesNotThrow(() -> {
 			pathFind.findPath(bg, vrsac);
@@ -98,9 +98,9 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 		Airport vrsacAir = findAirportByName("Aerodrom Vrsac");
 		Airport batajnica = findAirportByName("Batajnica");
 		
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(Optional.of(findRoute(nikolaTesla, vrsacAir)));
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(Optional.of(findRoute(nikolaTesla, batajnica)));
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(Optional.of(findRoute(batajnica, vrsacAir)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(List.of(findRoute(nikolaTesla, vrsacAir)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(List.of(findRoute(nikolaTesla, batajnica)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(List.of(findRoute(batajnica, vrsacAir)));
 		
 		Collection<PathDto> path = pathFind.findPath(bg, vrsac);
 		Printer.printPath(path);
@@ -119,9 +119,9 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 		Airport vrsacAir = findAirportByName("Aerodrom Vrsac");
 		Airport batajnica = findAirportByName("Batajnica");
 		
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(Optional.of(findRoute(nikolaTesla, vrsacAir)));
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(Optional.of(findRoute(nikolaTesla, batajnica)));
-		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(Optional.of(findRoute(batajnica, vrsacAir)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(List.of(findRoute(nikolaTesla, vrsacAir)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(List.of(findRoute(nikolaTesla, batajnica)));
+		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(List.of(findRoute(batajnica, vrsacAir)));
 		
 		Collection<PathDto> path = pathFind.findPath(bg, mm);
 		Printer.printPath(path);
