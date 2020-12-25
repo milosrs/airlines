@@ -14,7 +14,5 @@ public interface PathFindService {
 
 	Collection<PathDto> findPath(City sourceCity, City destinationCity) throws Exception;
 	
-	Collection<Airport> findPossibleSources(City sourceCity, City destinationCity) throws Exception;
-	
 	Collection<Airport> AStar(Airport sourceAirport, Airport destination) throws Exception;
 }

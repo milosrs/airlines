@@ -41,36 +41,6 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 	private RouteRepository routeRepository;
 	
 	@Test
-	@Order(1)
-	public void pathFind_findPossibleSources_shouldReturnNonEmptyCollection_forConnectedNodes() {
-		City bg = cities.parallelStream().filter(c -> c.getName().equals("Beograd")).findFirst().get();
-		City kraljevo = cities.parallelStream().filter(c -> c.getName().equals("Kraljevo")).findFirst().get();
-		City vrsac = cities.parallelStream().filter(c -> c.getName().equals("Vrsac")).findFirst().get();
-		
-		//Connected: Batajnica -> Morava
-		var sources1 = pathFind.findPossibleSources(bg, kraljevo);
-		//Connected: Nikola Tesla -> AeroVrsac | Batajnica -> AeroVrsac
-		var sources2 = pathFind.findPossibleSources(bg, vrsac);
-		
-		assertNotEquals(sources1.size(), 0);
-		assertNotEquals(sources2.size(), 0);
-		assertNotEquals(0, bg.getAirports().size());
-	}
-	
-	@Test
-	@Order(2)
-	public void pathFind_findPossibleSources_shouldReturnEmptyCollection_forNonConnectedNodes() {
-		City bg = cities.parallelStream().filter(c -> c.getName().equals("Beograd")).findFirst().get();
-		City mm = cities.parallelStream().filter(c -> c.getName().equals("Macvanska Mitrovica center of Universe")).findFirst().get();
-		
-		var sources1 = pathFind.findPossibleSources(bg, mm);
-		
-		assertEquals(sources1.size(), 0);
-		assertNotEquals(0, bg.getAirports().size());
-	}
-	
-	@Test
-	@Order(3)
 	public void pathFind_findPath_shouldNotThrowException() {
 		City bg = cities.parallelStream().filter(c -> c.getName().equals("Beograd")).findFirst().get();
 		City vrsac = cities.parallelStream().filter(c -> c.getName().equals("Vrsac")).findFirst().get();
@@ -90,7 +60,6 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 	}
 	
 	@Test
-	@Order(4)
 	public void pathFind_findPath_shouldNotReturnNullOrEmpty() throws Exception {
 		City bg = cities.parallelStream().filter(c -> c.getName().equals("Beograd")).findFirst().get();
 		City vrsac = cities.parallelStream().filter(c -> c.getName().equals("Vrsac")).findFirst().get();
@@ -110,7 +79,6 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 	}
 	
 	@Test
-	@Order(5)
 	public void pathFind_findPath_shouldReturnEmpty() throws Exception {
 		City bg = cities.parallelStream().filter(c -> c.getName().equals("Beograd")).findFirst().get();
 		City vrsac = cities.parallelStream().filter(c -> c.getName().equals("Vrsac")).findFirst().get();

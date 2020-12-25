@@ -3,11 +3,9 @@ package htec.airlines.service.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -15,20 +13,15 @@ import org.springframework.stereotype.Service;
 
 import htec.airlines.bom.Airport;
 import htec.airlines.bom.City;
-import htec.airlines.bom.Route;
 import htec.airlines.dto.PathDto;
 import htec.airlines.graph.Graph;
-import htec.airlines.repository.AirportRepository;
 import htec.airlines.repository.CityRepository;
-import htec.airlines.repository.RouteRepository;
 import htec.airlines.service.PathFindService;
 
 @Service
 public class PathFindServiceImpl implements PathFindService {
 	private static Double EARTH_R = 6372.8;
 	
-	@Autowired
-	private RouteRepository routeRepository;
 	@Autowired
 	private CityRepository cityRepository;
 	
@@ -42,11 +35,11 @@ public class PathFindServiceImpl implements PathFindService {
 	
 	@Override
 	public Collection<PathDto> findPath(City sourceCity, City destinationCity) throws Exception {
+		Collection<Airport> sourceCityAirports = sourceCity.getAirports();
 		Collection<Airport> destinationCityAirports = destinationCity.getAirports();
-		Collection<Airport> possibleSources = findPossibleSources(sourceCity, destinationCity);
 		Collection<Collection<Airport>> possiblePaths = new ArrayList<>();
 		
-		for(Airport possibleSrc : possibleSources) {
+		for(Airport possibleSrc : sourceCityAirports) {
 			for(Airport possibleDst : destinationCityAirports) {
 				possiblePaths.add((List<Airport>) AStar(possibleSrc, possibleDst));
 			}
@@ -63,12 +56,12 @@ public class PathFindServiceImpl implements PathFindService {
 			if(path.isEmpty()) {
 				continue;
 			}
-			Airport source = ((List<Airport>)path).get(0);
 			List<PathDto> pathRepresentation = new ArrayList<PathDto>();
-			List<Pair<Airport, Double>> adjacentToSource = Graph.getInstance().getListOfPairsForAirport(source.getId());
+			Airport source = ((List<Airport>)path).get(0);
 			Double pathPrice = 0D;
 			
 			for(int i = 1; i < path.size(); ++i) {
+				final List<Pair<Airport, Double>> adjacentToSource = Graph.getInstance().getListOfPairsForAirport(source.getId());
 				final Airport dst = ((List<Airport>)path).get(i);
 				Pair<Airport, Double> nextStop = adjacentToSource.stream().filter(p -> p.getFirst().getId().equals(dst.getId())).findFirst().get();
 				pathRepresentation.add(new PathDto(source.getName(), dst.getName(), nextStop.getSecond()));
@@ -85,29 +78,6 @@ public class PathFindServiceImpl implements PathFindService {
 		}
 		
 		return pathDtos;
-	}
-
-	public Collection<Airport> findPossibleSources(final City sourceCity, final City destinationCity) {
-		Collection<Airport> sourceCityAirports = sourceCity.getAirports();
-		Collection<Airport> destinationCityAirports = destinationCity.getAirports();
-		Collection<Airport> possibleSources = new ArrayList<>();
-		
-		for(Airport sourceAirport : sourceCityAirports) {
-			List<Pair<Airport, Double>> connectedSourceAirports = Graph.getInstance().getListOfPairsForAirport(sourceAirport.getId());
-			
-			if(connectedSourceAirports != null) {
-				boolean sourceIsConnectedToDestination = connectedSourceAirports.stream()
-						.filter(pair -> destinationCityAirports.stream()
-								.filter(dca -> dca.getId().equals(pair.getFirst().getId())).findAny().isPresent()
-								).count() > 0;
-				
-				if(sourceIsConnectedToDestination) {
-					possibleSources.add(sourceAirport);
-				}
-			}
-		}
-		
-		return possibleSources;
 	}
 
 	@Override
@@ -151,7 +121,7 @@ public class PathFindServiceImpl implements PathFindService {
 					return reconstructedPath;
 				}
 				
-				for(Pair<Airport, Double> neibghour : Graph.getInstance().getListOfPairsForAirport(sourceAirport.getId())) {
+				for(Pair<Airport, Double> neibghour : Graph.getInstance().getListOfPairsForAirport(currentAirport.getId())) {
 					Airport neibghourAirport = neibghour.getFirst();
 					Double weight = neibghour.getSecond();
 					Double newWeight = gScoreMap.get(currentAirport) + weight;
@@ -194,15 +164,8 @@ public class PathFindServiceImpl implements PathFindService {
 	
 	private Double heuristic(final Airport n, final Airport goal) throws Exception {
 		Double haversine = computeHaversine(n, goal);
-		List<Route> nGoalRoute = routeRepository.findByRefSourceAirportAndRefDestinationAirport(n, goal);
 		
-		if(nGoalRoute.isEmpty()) {
-			return Double.POSITIVE_INFINITY;
-		}
-		
-		final Route cheapestRoute = nGoalRoute.stream().min(Comparator.comparingDouble(Route::getPrice)).get();
-		
-		return haversine * (cheapestRoute.getStops() == 0 ? 1D : cheapestRoute.getStops());
+		return haversine;
 	}
 	
 	/**
@@ -212,13 +175,19 @@ public class PathFindServiceImpl implements PathFindService {
 	 * @return			Haversine distance
 	 */
 	private Double computeHaversine(final Airport n, final Airport goal) {
-		final Double dLat = Math.toRadians(goal.getLatitude() - n.getLatitude());
-		final Double dLon = Math.toRadians(goal.getLongitude() - n.getLongitude());
-		final Double nLat = Math.toRadians(n.getLatitude());
-		final Double gLat = Math.toRadians(goal.getLatitude());
-		final Double h = Math.pow(Math.sin(dLat/2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(nLat) * Math.cos(gLat);
-		final Double c = 2 * Math.asin(Math.sqrt(h));
+		Double haversine = Double.POSITIVE_INFINITY;
 		
-		return EARTH_R * c;
+		if(goal.getLatitude() != null && n.getLatitude() != null && goal.getLongitude() != null && n.getLongitude() != null) {
+			final Double dLat = Math.toRadians(goal.getLatitude() - n.getLatitude());
+			final Double dLon = Math.toRadians(goal.getLongitude() - n.getLongitude());
+			final Double nLat = Math.toRadians(n.getLatitude());
+			final Double gLat = Math.toRadians(goal.getLatitude());
+			final Double h = Math.pow(Math.sin(dLat/2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(nLat) * Math.cos(gLat);
+			final Double c = 2 * Math.asin(Math.sqrt(h));
+			
+			haversine = EARTH_R * c;
+		}
+		
+		return haversine;
 	}
 }
