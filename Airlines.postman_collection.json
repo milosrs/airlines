@@ -1,0 +1,375 @@
+{
+	"info": {
+		"_postman_id": "29362e5b-9d43-44bc-bfd8-6df70c2105f2",
+		"name": "Airlines",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:9001/api/admin/import",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwOTIwMDY5OCwiaWF0IjoxNjA5MTE0Mjk4fQ.GeB2ohs9A0yCuZKRfoKysZKpy9RN4eIdQa27IslZLf974bI-P7kbvi66tF41_ggy7qGBRcGcyVFMWjOXbiDMXQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "airportFile",
+							"type": "file",
+							"src": "/C:/Learning/Htec/airlines/src/main/resources/airports.txt"
+						},
+						{
+							"key": "routesFile",
+							"type": "file",
+							"src": "/C:/Learning/Htec/airlines/src/main/resources/routes.txt"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/admin/import",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"admin",
+						"import"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/auth/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"admin\",\r\n    \"password\" : \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/auth/register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : \"milosrs\",\r\n    \"firstName\" : \"Milos\",\r\n    \"lastName\" : \"Ribar\",\r\n    \"password\" : \"milosrs\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/city/getCity",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwODk0NDM0OSwiaWF0IjoxNjA4ODU3OTQ5fQ.gPnTWV1DCMx0z934UlJNLcmqML7WZwHkuWZHhOux4hqfESDPKg4kR_RFPoX-SBh75Jnlc-OnDtltqXbU0j65iQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cityName\" : \"Macvanska Mitrovica\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/city/getCity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"city",
+						"getCity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/admin/createCity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwODk0NDM0OSwiaWF0IjoxNjA4ODU3OTQ5fQ.gPnTWV1DCMx0z934UlJNLcmqML7WZwHkuWZHhOux4hqfESDPKg4kR_RFPoX-SBh75Jnlc-OnDtltqXbU0j65iQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Macvanska Mitrovica\",\r\n    \"country\" : 108,\r\n    \"description\" : \"Center of universe!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/admin/createCity",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"admin",
+						"createCity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/comments/add",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwODk0NDM0OSwiaWF0IjoxNjA4ODU3OTQ5fQ.gPnTWV1DCMx0z934UlJNLcmqML7WZwHkuWZHhOux4hqfESDPKg4kR_RFPoX-SBh75Jnlc-OnDtltqXbU0j65iQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cityId\" : 6647,\r\n    \"description\" : \"Pls work.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/comments/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"comments",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/comments/update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwODk0NDM0OSwiaWF0IjoxNjA4ODU3OTQ5fQ.gPnTWV1DCMx0z934UlJNLcmqML7WZwHkuWZHhOux4hqfESDPKg4kR_RFPoX-SBh75Jnlc-OnDtltqXbU0j65iQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\" : 2,\r\n    \"cityId\" : 6647,\r\n    \"description\" : \"Pls wor 2k21.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/comments/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"comments",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/comments/delete/1",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwODk0NDM0OSwiaWF0IjoxNjA4ODU3OTQ5fQ.gPnTWV1DCMx0z934UlJNLcmqML7WZwHkuWZHhOux4hqfESDPKg4kR_RFPoX-SBh75Jnlc-OnDtltqXbU0j65iQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\" : 2,\r\n    \"cityId\" : 6647,\r\n    \"description\" : \"Pls work.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/comments/delete/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"comments",
+						"delete",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/pathfind/find",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwOTIwMDY5OCwiaWF0IjoxNjA5MTE0Mjk4fQ.GeB2ohs9A0yCuZKRfoKysZKpy9RN4eIdQa27IslZLf974bI-P7kbvi66tF41_ggy7qGBRcGcyVFMWjOXbiDMXQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"srcCity\" : 1369,\r\n    \"dstCity\" : 1830\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/pathfind/find",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"pathfind",
+						"find"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/api/admin/getAdjacencyList",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYwODk0NDM0OSwiaWF0IjoxNjA4ODU3OTQ5fQ.gPnTWV1DCMx0z934UlJNLcmqML7WZwHkuWZHhOux4hqfESDPKg4kR_RFPoX-SBh75Jnlc-OnDtltqXbU0j65iQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"srcCity\" : 1369,\r\n    \"dstCity\" : 1847\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9001/api/admin/getAdjacencyList",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"api",
+						"admin",
+						"getAdjacencyList"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
