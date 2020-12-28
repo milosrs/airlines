@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import htec.airlines.bom.Airport;
 import htec.airlines.bom.City;
+import htec.airlines.dto.FindPathResponseDto;
 import htec.airlines.dto.PathDto;
 import htec.airlines.graph.Graph;
 import htec.airlines.repository.CityRepository;
+import htec.airlines.repository.RouteRepository;
 import htec.airlines.service.PathFindService;
 
 @Service
@@ -24,9 +26,11 @@ public class PathFindServiceImpl implements PathFindService {
 	
 	@Autowired
 	private CityRepository cityRepository;
+	@Autowired
+	private RouteRepository routeRepository;
 	
 	@Override
-	public Collection<PathDto> findPath(Long sourceCityId, Long destinationCityId) throws Exception {
+	public FindPathResponseDto findPath(Long sourceCityId, Long destinationCityId) throws Exception {
 		final City srcCity = cityRepository.findById(sourceCityId).get();
 		final City dstCity = cityRepository.findById(destinationCityId).get();
 		
@@ -34,10 +38,10 @@ public class PathFindServiceImpl implements PathFindService {
 	}
 	
 	@Override
-	public Collection<PathDto> findPath(City sourceCity, City destinationCity) throws Exception {
-		Collection<Airport> sourceCityAirports = sourceCity.getAirports();
-		Collection<Airport> destinationCityAirports = destinationCity.getAirports();
-		Collection<Collection<Airport>> possiblePaths = new ArrayList<>();
+	public FindPathResponseDto findPath(City sourceCity, City destinationCity) throws Exception {
+		final Collection<Airport> sourceCityAirports = sourceCity.getAirports();
+		final Collection<Airport> destinationCityAirports = destinationCity.getAirports();
+		final Collection<Collection<Airport>> possiblePaths = new ArrayList<>();
 		
 		for(Airport possibleSrc : sourceCityAirports) {
 			for(Airport possibleDst : destinationCityAirports) {
@@ -45,7 +49,9 @@ public class PathFindServiceImpl implements PathFindService {
 			}
 		}
 		
-		return findCheapestOfPossiblePaths(possiblePaths);
+		final Collection<PathDto> cheapestPath = findCheapestOfPossiblePaths(possiblePaths);
+		
+		return new FindPathResponseDto(cheapestPath);
 	}
 
 	private Collection<PathDto> findCheapestOfPossiblePaths(Collection<Collection<Airport>> possiblePaths) {
@@ -82,10 +88,17 @@ public class PathFindServiceImpl implements PathFindService {
 
 	@Override
 	public Collection<Airport> AStar(final Airport sourceAirport, final Airport destination) throws Exception {
-		List<Airport> openSet = new ArrayList<>(List.of(sourceAirport));
-		List<Airport> closedSet = new ArrayList<>();
-		Map<Airport, Double> gScoreMap = new HashMap<>(Map.of(sourceAirport, 0D));
-		Map<Airport, Airport> parents = new HashMap<>(Map.of(sourceAirport, sourceAirport));
+		final List<Airport> openSet = new ArrayList<>(List.of(sourceAirport));
+		final List<Airport> closedSet = new ArrayList<>();
+		final Map<Airport, Double> gScoreMap = new HashMap<>(Map.of(sourceAirport, 0D));
+		final Map<Airport, Airport> parents = new HashMap<>(Map.of(sourceAirport, sourceAirport));
+		
+		final Integer numberOfSourceRoutes = routeRepository.findCountOfSourceRoutesForAirport(sourceAirport.getId());
+		final Integer numberOfDestinationRoutes = routeRepository.findCountOfDestinationRoutesForAirport(destination.getId());
+		
+		if(numberOfSourceRoutes == 0 || numberOfDestinationRoutes == 0) {
+			return new ArrayList<>();
+		}
 		
 		while(!openSet.isEmpty()) {
 			Airport currentAirport = null;
@@ -107,6 +120,8 @@ public class PathFindServiceImpl implements PathFindService {
 				if(currentAirport == null) {
 					return null;
 				}
+				
+				System.out.println("Current airport: " + currentAirport.toString());
 				
 				if(currentAirport.getId().equals(destination.getId())) {
 					List<Airport> reconstructedPath = new ArrayList<Airport>();
@@ -163,7 +178,7 @@ public class PathFindServiceImpl implements PathFindService {
 	}
 	
 	private Double heuristic(final Airport n, final Airport goal) throws Exception {
-		Double haversine = computeHaversine(n, goal);
+		final Double haversine = computeHaversine(n, goal);
 		
 		return haversine;
 	}

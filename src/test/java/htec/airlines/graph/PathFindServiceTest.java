@@ -26,6 +26,7 @@ import org.mockito.quality.Strictness;
 import htec.airlines.bom.Airport;
 import htec.airlines.bom.City;
 import htec.airlines.bom.Route;
+import htec.airlines.dto.FindPathResponseDto;
 import htec.airlines.dto.PathDto;
 import htec.airlines.repository.RouteRepository;
 import htec.airlines.service.impl.PathFindServiceImpl;
@@ -70,12 +71,14 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, vrsacAir)).thenReturn(List.of(findRoute(nikolaTesla, vrsacAir)));
 		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(List.of(findRoute(nikolaTesla, batajnica)));
 		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(List.of(findRoute(batajnica, vrsacAir)));
+		Mockito.when(routeRepository.findCountOfDestinationRoutesForAirport(Mockito.anyLong())).thenReturn(1);
+		Mockito.when(routeRepository.findCountOfSourceRoutesForAirport(Mockito.anyLong())).thenReturn(1);
+		Mockito.when(routeRepository.findTotalCountOfRoutesForAirport(Mockito.anyLong())).thenReturn(1);
 		
-		Collection<PathDto> path = pathFind.findPath(bg, vrsac);
-		Printer.printPath(path);
+		FindPathResponseDto path = pathFind.findPath(bg, vrsac);
 		
 		assertNotNull(path);
-		assertNotEquals(0, path.size());
+		assertNotEquals(0, path.getPaths().size());
 	}
 	
 	@Test
@@ -91,10 +94,10 @@ public class PathFindServiceTest extends GraphRelatedTestConfigurer {
 		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(nikolaTesla, batajnica)).thenReturn(List.of(findRoute(nikolaTesla, batajnica)));
 		Mockito.when(routeRepository.findByRefSourceAirportAndRefDestinationAirport(batajnica, vrsacAir)).thenReturn(List.of(findRoute(batajnica, vrsacAir)));
 		
-		Collection<PathDto> path = pathFind.findPath(bg, mm);
-		Printer.printPath(path);
+		FindPathResponseDto path = pathFind.findPath(bg, mm);
 		
-		assertEquals(0, path.size());
+		assertNotNull(path);
+		assertEquals(0, path.getPaths().size());
 	}
 	
 	private Airport findAirportByName(String name) {
